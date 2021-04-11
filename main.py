@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 from discord.ext.commands import has_permissions
+from discord.utils import get
 import json
 import os
 import tokens as t
@@ -68,6 +69,20 @@ async def inform(ctx):
     await ch.send("<@everyone>")
     await ch.send(embed=embedVar)
 
+@Client.command()
+@has_permissions(manage_guild=True)
+async def twitch(ctx):
+    info = str.replace(ctx.message.content, get_prefix(Client, ctx) + 'twitch ', '')
+    embedVar = discord.Embed(title="Info", description=info, color=0xEADE48)
+    with open('channels.json', 'r') as f:
+        channels = json.load(f)
+    ch = ctx.channel
+    for c in ctx.guild.channels:
+        if c.name == channels[str(ctx.guild.id)]:
+            print('hi')
+            ch = Client.get_channel(c.id)
+    await ch.send("<@Twitch Notifications>")
+    await ch.send(embed=embedVar)
 
 @Client.command()
 @has_permissions(manage_guild=True)
